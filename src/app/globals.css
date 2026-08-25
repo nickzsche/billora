@@ -1,0 +1,241 @@
+@import "tailwindcss";
+
+/*
+ * Billora — premium dark fintech theme
+ * Deep charcoal surfaces, emerald accent, gold highlights for money numbers.
+ */
+
+@theme {
+  --color-ink-950: #0a0d10;
+  --color-ink-900: #0e1216;
+  --color-ink-850: #13181d;
+  --color-ink-800: #191f26;
+  --color-ink-700: #222a33;
+  --color-ink-600: #2e3843;
+  --color-ink-500: #46525f;
+  --color-ink-400: #64707e;
+  --color-ink-300: #8b97a5;
+  --color-ink-200: #b7c1cc;
+  --color-ink-100: #dde4ea;
+
+  --color-emerald-accent: #10b981;
+  --color-emerald-soft: #34d399;
+  --color-gold: #e8c15a;
+  --color-gold-soft: #f3d98b;
+  --color-danger: #f87171;
+  --color-warn: #fbbf24;
+  --color-info: #60a5fa;
+
+  --font-display: var(--font-sora), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background-color: var(--color-ink-950);
+  color: var(--color-ink-100);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.35);
+}
+
+/* ---------- scrollbars ---------- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-ink-600) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--color-ink-600);
+  border-radius: 8px;
+}
+
+/* ---------- reusable surfaces ---------- */
+.surface {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0) 40%),
+    var(--color-ink-850);
+  border: 1px solid var(--color-ink-700);
+  border-radius: 1rem;
+}
+.surface-hover {
+  transition: border-color 160ms ease, transform 160ms ease, box-shadow 160ms ease;
+}
+.surface-hover:hover {
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 8px 30px -12px rgba(16, 185, 129, 0.15);
+}
+
+.money {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-gold);
+}
+
+.field {
+  width: 100%;
+  background: var(--color-ink-900);
+  border: 1px solid var(--color-ink-600);
+  border-radius: 0.625rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--color-ink-100);
+  outline: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+.field:focus {
+  border-color: var(--color-emerald-accent);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+.field::placeholder {
+  color: var(--color-ink-500);
+}
+select.field option {
+  background: var(--color-ink-900);
+}
+
+.label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-ink-400);
+  margin-bottom: 0.35rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  border-radius: 0.625rem;
+  padding: 0.55rem 1.05rem;
+  cursor: pointer;
+  transition: filter 140ms ease, transform 140ms ease, background 140ms ease,
+    border-color 140ms ease;
+  white-space: nowrap;
+}
+.btn:active {
+  transform: translateY(1px);
+}
+.btn-primary {
+  background: linear-gradient(180deg, #14cf8e, #0ea86e);
+  color: #04120c;
+  border: 1px solid rgba(16, 185, 129, 0.6);
+  box-shadow: 0 6px 18px -8px rgba(16, 185, 129, 0.55);
+}
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--color-ink-200);
+  border: 1px solid var(--color-ink-600);
+}
+.btn-ghost:hover {
+  border-color: var(--color-ink-400);
+  color: white;
+}
+.btn-danger {
+  background: transparent;
+  color: var(--color-danger);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+.btn-danger:hover {
+  background: rgba(248, 113, 113, 0.08);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+.badge-draft {
+  color: var(--color-ink-300);
+  background: rgba(100, 112, 126, 0.14);
+  border-color: rgba(100, 112, 126, 0.35);
+}
+.badge-sent {
+  color: var(--color-info);
+  background: rgba(96, 165, 250, 0.12);
+  border-color: rgba(96, 165, 250, 0.35);
+}
+.badge-paid {
+  color: var(--color-emerald-soft);
+  background: rgba(52, 211, 153, 0.12);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+.badge-overdue {
+  color: var(--color-danger);
+  background: rgba(248, 113, 113, 0.12);
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+/* ---------- skeleton loaders ---------- */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-ink-800);
+  border-radius: 0.5rem;
+}
+.skeleton::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ---------- print (A4 invoice) ---------- */
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  html,
+  body {
+    background: #ffffff !important;
+    color: #111827 !important;
+  }
+  .no-print {
+    display: none !important;
+  }
+  .print-sheet {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+  }
+}
