@@ -4,6 +4,7 @@ import { getDb } from "@/db";
 import { settings } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
 import { getSettings } from "@/lib/data";
+import { isSupportedCurrency } from "@/lib/money";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,10 +41,7 @@ export async function PUT(req: Request) {
     tax = n;
   }
 
-  const currency =
-    typeof body.currency === "string" && ["USD", "EUR", "GBP", "TRY"].includes(body.currency)
-      ? body.currency
-      : undefined;
+  const currency = isSupportedCurrency(body.currency) ? body.currency : undefined;
 
   const prefixRaw = str("invoicePrefix", 6)?.toUpperCase().replace(/[^A-Z0-9]/g, "");
   const prefix = prefixRaw && prefixRaw.length > 0 ? prefixRaw : undefined;

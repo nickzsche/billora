@@ -3,6 +3,7 @@ import Link from "next/link";
 import { eq } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import { requireUser } from "@/lib/data";
+import { generateDueRecurringInvoices } from "@/lib/data";
 import { getDb, ensureSeeded } from "@/db";
 import { clients, invoices } from "@/db/schema";
 import { displayStatus, formatDate, formatMoneyCompact } from "@/lib/money";
@@ -19,6 +20,9 @@ export default async function InvoicesPage({
 }) {
   const user = await requireUser();
   ensureSeeded();
+  // Lazy recurring engine: materialise any follow-up invoices whose next run
+  // date has arrived before rendering the list (no external scheduler needed).
+  generateDueRecurringInvoices(user.id);
   const db = getDb();
 
   const invoiceRows = db.select().from(invoices).where(eq(invoices.userId, user.id)).all();

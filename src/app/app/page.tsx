@@ -15,6 +15,7 @@ import {
   formatDate,
   formatMoney,
   formatMoneyCompact,
+  round2,
 } from "@/lib/money";
 import { DashboardChart } from "@/components/dashboard-chart";
 import { EmptyState, StatusBadge } from "@/components/ui";
@@ -233,6 +234,3 @@ function KpiCard({
   );
 }
 
-function round2(n: number): number {
-  return Math.round(n * 100) / 100;
-}

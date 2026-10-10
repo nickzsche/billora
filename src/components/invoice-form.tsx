@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Plus, Trash2, X, Repeat, Send } from "lucide-react";
-import { CURRENCIES, computeTotals, formatDate, todayISO, addMonthsISO } from "@/lib/money";
+import { CURRENCIES, computeTotals, formatDate, formatMoney, todayISO, addMonthsISO } from "@/lib/money";
 import { toast } from "@/components/toaster";
 
 type ClientOption = { id: number; name: string; company: string; currency: string };
@@ -336,8 +336,8 @@ export function InvoiceForm({
             )}
           </div>
           <p className="mt-2 text-xs leading-relaxed text-ink-500">
-            v1 note: recurring invoices are flagged and dated here; automatic generation lands with
-            the scheduler in the roadmap.
+            Recurring invoices generate their next draft automatically the first time the invoices
+            list is opened on or after the next-run date — no scheduler required.
           </p>
         </div>
 
@@ -381,9 +381,5 @@ function Row({ label, value }: { label: string; value: string }) {
 }
 
 function fmt(amount: number, currency: string): string {
-  try {
-    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(amount);
-  } catch {
-    return `${currency} ${amount.toFixed(2)}`;
-  }
+  return formatMoney(amount, currency);
 }

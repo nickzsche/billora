@@ -3,6 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { getDb } from "@/db";
 import { expenses } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
+import { round2, todayISO } from "@/lib/money";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,7 +45,7 @@ export async function POST(req: Request) {
   const date =
     typeof body.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(body.date)
       ? body.date
-      : new Date().toISOString().slice(0, 10);
+      : todayISO();
   const category =
     typeof body.category === "string" && CATEGORIES.includes(body.category)
       ? body.category
@@ -55,7 +56,7 @@ export async function POST(req: Request) {
     .values({
       userId: user.id,
       category,
-      amount: Math.round(amount * 100) / 100,
+      amount: round2(amount),
       date,
       note: typeof body.note === "string" ? body.note.trim() : "",
     })

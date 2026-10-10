@@ -3,6 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { getDb } from "@/db";
 import { clients } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
+import { isSupportedCurrency } from "@/lib/money";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -40,9 +41,7 @@ export async function PUT(req: Request, { params }: Params) {
     typeof body[k] === "string" ? (body[k] as string).trim() : fallback;
 
   const currency =
-    typeof body.currency === "string" && ["USD", "EUR", "GBP", "TRY"].includes(body.currency)
-      ? body.currency
-      : existing.currency;
+    isSupportedCurrency(body.currency) ? body.currency : existing.currency;
 
   const client = db
     .update(clients)

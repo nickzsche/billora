@@ -3,7 +3,7 @@ import { eq, and } from "drizzle-orm";
 import { getDb } from "@/db";
 import { invoiceItems, invoices, payments } from "@/db/schema";
 import { getSessionUser } from "@/lib/auth";
-import { computeTotals, todayISO, addMonthsISO } from "@/lib/money";
+import { computeTotals, todayISO, addMonthsISO, isValidISODate } from "@/lib/money";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -109,18 +109,28 @@ export async function PUT(req: Request, { params }: Params) {
   const totals = computeTotals(items, taxRate, discountRate);
   const recurring = Boolean(body.recurring);
 
+  const issueDate = validDate(body.issueDate) ? (body.issueDate as string) : inv.issueDate;
+  const dueDate = validDate(body.dueDate) ? (body.dueDate as string) : inv.dueDate;
+  if (dueDate < issueDate) {
+    return NextResponse.json({ error: "Due date cannot be before the issue date" }, { status: 400 });
+  }
+
   const updated = db
     .update(invoices)
     .set({
       clientId: Number(body.clientId ?? inv.clientId),
-      issueDate: str(body.issueDate, inv.issueDate),
-      dueDate: str(body.dueDate, inv.dueDate),
+      issueDate,
+      dueDate,
       currency: str(body.currency, inv.currency),
       taxRate,
       discountRate,
       notes: str(body.notes, inv.notes),
       recurring: recurring ? 1 : 0,
-      nextRun: recurring ? str(body.nextRun, inv.nextRun ?? addMonthsISO(str(body.dueDate, inv.dueDate), 1)) : null,
+      nextRun: recurring
+        ? validDate(body.nextRun)
+          ? (body.nextRun as string)
+          : inv.nextRun ?? addMonthsISO(dueDate, 1)
+        : null,
       ...totals,
     })
     .where(eq(invoices.id, inv.id))
@@ -147,4 +157,8 @@ export async function DELETE(_req: Request, { params }: Params) {
 
 function str(v: unknown, fallback: string): string {
   return typeof v === "string" && v.trim() ? v.trim() : fallback;
+}
+
+function validDate(v: unknown): v is string {
+  return isValidISODate(v);
 }
