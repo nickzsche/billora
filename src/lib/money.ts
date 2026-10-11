@@ -49,8 +49,8 @@ export function isOverdue(invoice: { status: string; dueDate: string }): boolean
   if (invoice.status !== "sent") return false;
   const due = parseISODate(invoice.dueDate);
   if (!due) return false;
-  // overdue once the due date's end-of-day has passed
-  return due.getTime() + 24 * 60 * 60 * 1000 - 1 < Date.now();
+  // compare local calendar dates — UTC arithmetic drifts by the offset near midnight
+  return toISO(due) < todayISO();
 }
 
 /** Display status: overdue wins over sent. */
