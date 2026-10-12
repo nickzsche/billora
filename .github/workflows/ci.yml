@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # `node --experimental-strip-types` requires Node >= 22.6.0.
+          node-version: "22"
+          cache: npm
+      # package-lock.json is the frozen source of truth; `npm ci` keeps the
+      # build reproducible.
+      - run: npm ci
+      - run: npm test
+      - run: npm run typecheck
